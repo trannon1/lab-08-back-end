@@ -1,7 +1,7 @@
-# lab-06-back-end
+# lab-06-7-8-back-end
 
 **Author**: Bryan Tran, Peter Cole - Pair Program
-**Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)
+**Version**: 3.0.0 (increment the patch/fix version number if you make more commits past your first submission)
 
 ## Overview
 <!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for this class. (i.e. What's your problem domain?) -->
@@ -27,9 +27,14 @@ This app uses cors, express, and dotenv as dependencies. The language used for c
 12/10/2019 10:44am - Application has been deployed to Heroku
 12/10/2019 11:10am - Functionality added to server.js for location search
 12/10/2019 11:46am - Functionality added to server.js for weather forecast
+12/11/2019 - Lab 7
+12/12/2019 - Lab 8
 
 ## Credits and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
+Pair Programmed - Bryan Tran, Peter Cole 
+
+## LAB 6
 
 Number and name of feature: Feature #1: Location Search
 
@@ -51,3 +56,15 @@ Start time: 11:09am
 Finish time: 11:45am
 
 Actual time needed to complete: 36 minutes
+
+## LAB 8
+
+Number and name of feature: Feature #1: DATABASE SQL
+
+Estimate of time needed to complete: 4 hours
+
+Start time: 9:10am
+
+Finish time: 1:45pm
+
+Actual time needed to complete: 5+ hours
