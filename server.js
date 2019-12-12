@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3001;
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 app.use(cors());
-// let parser = new DOMParser();
+const pg = require('pg');
 
 // routes
 app.get('/location', (request, response) => {
@@ -142,9 +142,7 @@ function Weather(summary, time){
 }
 
 function Event(value){
-  // console.log("abc");
   this.link = value.url;
-  // console.log("abc");
   this.name = value.title;
   this.event_date = value.start_time;
   this.summary = value.description;
