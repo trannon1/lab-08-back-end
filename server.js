@@ -71,7 +71,8 @@ function searchLatToLong(request, response){
 
       // {
       let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOKEY}`;
-  // console.log(url);
+      
+      // console.log(url);
 
   superagent.get(url)
     .then(results => {
