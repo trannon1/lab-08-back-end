@@ -57,22 +57,36 @@ function searchLatToLong(request, response){
   // const city = request.query.data;
   // console.log(city);
 
-  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOKEY}`;
+  let city = request.query.data;
+
+  let sql = 'SELECT * FROM city_explorer WHERE city_name=$1;';
+  let safeValues = [city];
+
+  client.query(sql, safeValues)
+    .then(results => {
+      
+      console.log(results);
+
+      // if databaseTrue ? response send with results -> locatObj : below
+
+      // {
+      let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOKEY}`;
   // console.log(url);
 
   superagent.get(url)
     .then(results => {
-      
+
       // console.log(results.body)
       const locationObject = new Location(request.query.data, results.body.results[0]);
 
       // console.log(locationObject)
       response.send(locationObject);
-    
+
     })
     .catch (err => {
       response.send(err);
     })
+    }) //}
 }
 
 function getWeather(request, response){
@@ -85,19 +99,19 @@ function getWeather(request, response){
   let url =  `https://api.darksky.net/forecast/${process.env.DARKSKYKEY}/${latitude},${longitude}`;
 
   superagent.get(url)
-  .then(results => {
-    // weather = results.body.daily.data;
-    const weatherObject = results.body.daily.data.map(values => 
-      new Weather(values.summary, values.time)
-    )
-    // console.log(results);
-    // console.log(url);
-    // console.log(weatherObject);
-    response.send(weatherObject);
-  })
-  .catch (err =>{
-    response.send(err);
-  })
+    .then(results => {
+      // weather = results.body.daily.data;
+      const weatherObject = results.body.daily.data.map(values => 
+        new Weather(values.summary, values.time)
+      )
+      // console.log(results);
+      // console.log(url);
+      // console.log(weatherObject);
+      response.send(weatherObject);
+    })
+    .catch (err =>{
+      response.send(err);
+    })
 }
 
 function getEvent(request, response){
@@ -108,25 +122,25 @@ function getEvent(request, response){
   let url =  `http://api.eventful.com/json/events/search?app_key=${process.env.EVENTBRITEKEY}&where=${latitude},${longitude}`;
 
   superagent.get(url)
-  .then(results => {
-    let events = JSON.parse(results.text);
-    const eventObject = events.events.event.map(value => 
-      new Event(value)
-    )
+    .then(results => {
+      let events = JSON.parse(results.text);
+      const eventObject = events.events.event.map(value => 
+        new Event(value)
+      )
 
-    // console.log("abc");
-    // console.log(events.events.event);
-    // const eventObject = results.body.map(values => 
-    //   new Event()
-    // )
-    // console.log(results);
-    // console.log(url);
-    // console.log(eventObject);
-    response.send(eventObject);
-  })
-  .catch (err =>{
-    response.send(err);
-  })
+      // console.log("abc");
+      // console.log(events.events.event);
+      // const eventObject = results.body.map(values => 
+      //   new Event()
+      // )
+      // console.log(results);
+      // console.log(url);
+      // console.log(eventObject);
+      response.send(eventObject);
+    })
+    .catch (err =>{
+      response.send(err);
+    })
 }
 
 function Location(request, geoData){
@@ -147,6 +161,23 @@ function Event(value){
   this.event_date = value.start_time;
   this.summary = value.description;
 }
+
+// LAB 8 DB Questions
+
+app.get('/add', (request, response) => {
+  let firstName = request.query.first;
+  let lastName = request.query.last;
+  
+  let sql = 'INSERT INTO people (first_name, last_name) VALUES ($1, $2);';
+  let safeValues = [firstName, lastName];
+
+  client.query(sql, safeValues)
+
+  // check the database
+  
+// })
+
+
 
 app.get('*', (request, response) => {
   response.status(404).send('Page not found');
