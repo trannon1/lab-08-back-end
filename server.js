@@ -7,19 +7,23 @@ const app = express();
 const superagent = require('superagent');
 const PORT = process.env.PORT || 3001;
 app.use(cors());
-const pg = require('pg');
+
+const client = require('./lib/client');
+const getLocation = require('./lib/location/getLocation');
 
 // routes
-app.get('/location', (request, response) => {
-  try{
-    searchLatToLong(request, response);
-  }
-  catch(error){
-    console.error(error); // will turn the error message red if the environment supports it
 
-    response.status(500).send('so sorry, something is not working on our end');
-  }
-})
+app.get('/location', getLocation);
+// app.get('/location', (request, response) => {
+//   try{
+//     searchLatToLong(request, response);
+//   }
+//   catch(error){
+//     console.error(error); // will turn the error message red if the environment supports it
+
+//     response.status(500).send('so sorry, something is not working on our end');
+//   }
+// })
 
 app.get('/weather', (request, response) => {
   try{
@@ -76,22 +80,22 @@ app.get('/events', (request, response) => {
 //     })
 // })
 
-function searchLatToLong(request, response){
+// function searchLatToLong(request, response){
 
-  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOKEY}`;
+//   let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOKEY}`;
 
-  superagent.get(url)
-    .then(results => {
+//   superagent.get(url)
+//     .then(results => {
       
-      const locationObject = new Location(request.query.data, results.body.results[0]);
+//       const locationObject = new Location(request.query.data, results.body.results[0]);
 
-      response.send(locationObject);
+//       response.send(locationObject);
     
-    })
-    .catch (err => {
-      response.send(err);
-    })
-}
+//     })
+//     .catch (err => {
+//       response.send(err);
+//     })
+// }
 
 function getWeather(request, response){
   let latitude = request.query.data.latitude;
@@ -130,12 +134,12 @@ function getEvent(request, response){
   })
 }
 
-function Location(request, geoData){
-  this.search_query = request;
-  this.formatted_query = geoData.formatted_address;
-  this.latitude = geoData.geometry.location.lat;
-  this.longitude = geoData.geometry.location.lng;
-}
+// function Location(request, geoData){
+//   this.search_query = request;
+//   this.formatted_query = geoData.formatted_address;
+//   this.latitude = geoData.geometry.location.lat;
+//   this.longitude = geoData.geometry.location.lng;
+// }
 
 function Weather(summary, time){
   this.forecast = summary;
@@ -153,4 +157,9 @@ app.get('*', (request, response) => {
   response.status(404).send('Page not found');
 });
 
-app.listen(PORT, () => console.log(`listening on port ${PORT}!`));
+client.connect()
+  .then( () => {
+    app.listen(PORT, () => console.log(`App is on port ${PORT}`));
+  })
+  .catch( err => console.error(err));
+
