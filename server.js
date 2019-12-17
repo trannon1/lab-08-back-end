@@ -153,6 +153,23 @@ function Event(value){
   this.summary = value.description;
 }
 
+// LAB 8 DB Questions
+
+app.get('/add', (request, response) => {
+  let firstName = request.query.first;
+  let lastName = request.query.last;
+  
+  let sql = 'INSERT INTO people (first_name, last_name) VALUES ($1, $2);';
+  let safeValues = [firstName, lastName];
+
+  client.query(sql, safeValues)
+
+  // check the database
+  
+// })
+
+
+
 app.get('*', (request, response) => {
   response.status(404).send('Page not found');
 });
